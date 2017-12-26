@@ -19,7 +19,7 @@ class ViewController: UIViewController, PrototypeCellReuseIdentifier {
     static var reusableCellIdentifier: String {get {return "cell"} }
 
 
-    let titleArray = ["A", "B", "C", "D"]
+    let titleArray = ["A", "B", "C", "D", "E", "F", "G", "E", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q"]
     let subtitleText = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
 
     let normalHeight = 45.0
@@ -69,13 +69,27 @@ extension ViewController: UITableViewDataSource {
 extension ViewController: UITableViewDelegate {
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        print(#function, "\(indexPath)")
 
+        let previousSelectedIndexPath = indexPathForExpandingRow
         if (tableView.cellForRow(at: indexPath)?.detailTextLabel?.isHidden)! {
             indexPathForExpandingRow = indexPath
         } else {
             indexPathForExpandingRow = nil
         }
 
+        tableView.beginUpdates()
+        tableView.reloadRows(at: [indexPath], with: .automatic)
+
+        if previousSelectedIndexPath != nil{
+            tableView.deselectRow(at: previousSelectedIndexPath!, animated: true)
+            tableView.delegate?.tableView!(tableView, didDeselectRowAt: previousSelectedIndexPath!)
+        }
+        tableView.endUpdates()
+    }
+
+    func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
+        print(#function, "\(indexPath)")
         tableView.beginUpdates()
         tableView.reloadRows(at: [indexPath], with: .automatic)
         tableView.endUpdates()
